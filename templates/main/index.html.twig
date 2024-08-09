@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}GeekUniverse{% endblock %}
+
+{% block body %}
+    <!-- Header-->
+    <header class="header">
+        <div class="container px-4 text-center">
+            <h1>GeekUniverse</h1>
+            <a class="button-catalogue" href="{{ path('app_book_index') }}">Parcourez le catalogue</a>
+        </div>
+    </header>
+    <!-- About section-->
+    <section id="about">
+        <div class="container px-4">
+            <div class="row gx-4 justify-content-center">
+                <div class="col-lg-8">
+                    <h2>GeekUniverse: quezako ?</h2>
+                    <p class="lead">GeekUniverse est une médiathèque de gestion.</p>
+                    <p class="lead">Il permet de gérer les ouvrages, les emprunts et les retours de ces derniers.</p>
+                    <p class="lead">Ce site de gestion de prêt de livres et DVD est un outil pratique 
+                    pour quiconque souhaite garder une trace organisée de ses articles prêtés.
+                    En utilisant ce service, vous pouvez éviter les oublis, assurer des retours en temps
+                     voulu, et maintenir une gestion efficace de votre collection personnelle.</p>
+                    <p class="lead"> Ce site se veut simple d'utilisation et efficace pour vous permettre de gérer vos prêts de médias.</p>
+                    <p class="lead">Il est possible de consulter les ouvrages disponibles, de les emprunter et de les rendre.</p>
+                    <p class="lead"><strong>Merci de votre visite sur cette plateforme !!</strong></p>
+                    <ul>
+                        <li><strong>Les fonctions principales : </strong></li>
+                        <li><strong><u>Fiabilité :</u></strong> Un système de gestion de prêt de livres 
+                        et DVD & Blu-ray et Jeux vidéos fiable et sécurisé.</li>
+                        <li><strong><u>Simplicité :</u></strong> Une interface utilisateur intuitive qui 
+                        rend la consultation de livres, DVD & Blu-ray et Jeux vidéos.</li>
+                        <li><strong><u>Efficacité :</u></strong> Consultation en temps réel du statut
+                         des ouvrages (disponible, emprunté, indisponible).</li>
+                        <li><strong><u>Fonctionnalités :</u></strong> Un affichage des informations 
+                        détaillées sur chaque article, de suivre les prêts et de recevoir des rappels automatiques.</li>
+                        <li><strong><u>Organisation :</u></strong>Historique des prêts et des retours.</li>
+                        <li></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
