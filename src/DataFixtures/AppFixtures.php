@@ -13,9 +13,25 @@ class AppFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
-        EditorFactory::createMany(20);
-        AuthorFactory::createMany(50);
+        // Création des éditeurs
+        EditorFactory::createMany(5);
+
+        // Création des auteurs
+        AuthorFactory::createMany(20);
+
+        // Création des utilisateurs
         UserFactory::createMany(5);
-        BookFactory::createMany(100);
+
+        // Création de commentaires sous les livres
+        UserFactory::createMany(2);
+
+        // Création des livres avec une image aléatoire pour chaque livre
+        BookFactory::createMany(100, function() {
+            return [
+                'cover' => 'https://picsum.photos/200/300', // URL pour une image aléatoire de Picsum
+            ];
+        });
+
+        $manager->flush();
     }
 }

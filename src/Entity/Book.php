@@ -28,9 +28,14 @@ class Book
     private ?string $isbn = null;
 
     #[Assert\NotBlank()]
-    #[Assert\Url()]
     #[ORM\Column(length: 255)]
     private ?string $cover = null;
+
+
+    // #[Assert\NotBlank()]
+    // #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
+    // private ?\DateTimeImmutable $createdAt = null;
+
 
     #[Assert\NotBlank()]
     #[ORM\Column]

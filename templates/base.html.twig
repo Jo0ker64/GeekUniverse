@@ -4,18 +4,11 @@
 		<meta charset="utf-8"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
 		<title>{% block title %}GeekUniverse{% endblock %}</title>
-		<link rel="icon" href= "{{ asset ('assets/images/icons/geek.png')}}">
-
+		<link rel="icon" href="{{ asset('assets/images/icons/geek.png')}}">
 		<link href="{{ asset('assets/css/styles.css') }}" rel="stylesheet"/>
 		<link href="{{ asset('assets/css/app.css') }}" rel="stylesheet"/> 
 		{% block stylesheets %}{% endblock %}
 
-
-		{% block javascripts %}
-			{% block importmap %}
-				{{ importmap('app') }}
-			{% endblock %}
-		{% endblock %}
 	</head>
 	<body
 		id="page-top">
@@ -57,11 +50,10 @@
 				<p class="m-0 text-center text-white">Copyright &copy; GeekUniverse</p>
 				<p class="m-0 text-center text-white">
 					Développeur : Jonathan Auroux Martel
-					<a href="https://www.linkedin.com/in/jo064"><img src="../images/icons/linkedin.png"></a>
-					<a href="https://github.com/Jo0ker64"><img src="../images/icons/github.png"></a>
+					<a href="https://www.linkedin.com/in/jo064"><img src=" {{asset('assets/images/icons/linkedin.png')}}"></a>
+					<a href="https://github.com/Jo0ker64"><img src="{{asset('assets/images/icons/github.png')}}"></a>
 				</p>
 			</div>
 		</footer>
-
 	</body>
 </html>
