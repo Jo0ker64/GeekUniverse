@@ -12,7 +12,6 @@
         "doctrine/doctrine-bundle": "^2.11",
         "doctrine/doctrine-migrations-bundle": "^3.3",
         "doctrine/orm": "^3.0",
-        "easycorp/easyadmin-bundle": "^4.11",
         "pagerfanta/doctrine-orm-adapter": "^4.3",
         "pagerfanta/twig": "^4.3",
         "phpdocumentor/reflection-docblock": "^5.3",
