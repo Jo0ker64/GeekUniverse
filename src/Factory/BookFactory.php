@@ -39,7 +39,6 @@ final class BookFactory extends ModelFactory
     {
         parent::__construct();
     }
-
     /**
      * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#model-factories
      *
@@ -60,7 +59,6 @@ final class BookFactory extends ModelFactory
             'createdBy' => UserFactory::random(),
         ];
     }
-
     /**
      * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#initialization
      */
