@@ -13,7 +13,6 @@
                     <span class="text-muted"><small>*: champ requis</small></span>
 
                     {{ form_errors(registrationForm) }}
-
                     {{ form_start(registrationForm) }}
                     {{ form_row(registrationForm.firstname, {label: 'Prénom'}) }}
                     {{ form_row(registrationForm.lastname, {label: 'Nom'}) }}
@@ -21,10 +20,10 @@
                     {{ form_row(registrationForm.email, {label: 'Adresse email'}) }}
                     {{ form_row(registrationForm.roles, {label: 'Rôles'}) }}
                     {{ form_row(registrationForm.plainPassword.first, {
-                        label: 'Mot de passe'
+                        label: 'Entrez votre mot de passe'
                     }) }}
                     {{ form_row(registrationForm.plainPassword.second, {
-                        label: 'Répétez le mot de passe'
+                        label: 'Répétez votre mot de passe'
                     })}}
 
                     <button type="submit" class="btn btn-outline-primary">S'inscrire</button>
