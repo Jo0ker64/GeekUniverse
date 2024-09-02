@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes réservations{% endblock %}
+
+{% block body %}
+    <h1>Mes réservations</h1>
+
+    <ul>
+    {% for reservation in reservations %}
+        <li>{{ reservation.book.title }} - Réservé le {{ reservation.reservationDate|date('d/m/Y H:i') }}</li>
+    {% else %}
+        <li>Aucune réservation trouvée.</li>
+    {% endfor %}
+    </ul>
+{% endblock %}

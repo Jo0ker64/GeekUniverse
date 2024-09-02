@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -20,42 +22,29 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?int $id = null;
 
+    #[ORM\Column(length: 180, unique: true)]
+    #[Assert\NotBlank]
+    private ?string $email = null;
+
     #[ORM\Column(length: 180, nullable: true)]
     private ?string $username = null;
 
-    /**
-     * @var list<string> The user roles
-     */
     #[ORM\Column]
     private array $roles = [];
 
     /**
      * @var string The hashed password
-     * La contrainte Regex valide que le mot de passe :
-     * * contient au moins un chiffre
-     * * contient au moins une lettre en minuscule
-     * * contient au moins une lettre en majuscule
-     * * contient au moins un caractère spécial qui n'est pas un espace
-     * * fait entre 8 et 32 caractères de long
      */
-    #[Assert\NotCompromisedPassword()]
-    #[Assert\PasswordStrength(minScore: Assert\PasswordStrength::STRENGTH_STRONG)]
-    #[Assert\Regex('/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*\W)(?!.*\s).{8,32}$/')]
     #[ORM\Column]
     private ?string $password = null;
 
-    #[Assert\NotBlank()]
+    #[Assert\NotBlank]
     #[ORM\Column(length: 255)]
     private ?string $firstname = null;
 
-    #[Assert\NotBlank()]
+    #[Assert\NotBlank]
     #[ORM\Column(length: 255)]
     private ?string $lastname = null;
-
-    #[Assert\Email()]
-    #[Assert\NotBlank()]
-    #[ORM\Column(length: 255, unique: true)]
-    private ?string $email = null;
 
     #[ORM\Column(type: Types::DATE_IMMUTABLE, nullable: true)]
     private ?\DateTimeImmutable $lastConnectedAt = null;
@@ -66,9 +55,32 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'boolean')]
     private bool $isVerified = false;
 
+    #[ORM\OneToMany(targetEntity: Reservation::class, mappedBy: 'user')]
+    private Collection $reservations;
+
+    #[ORM\OneToMany(targetEntity: Book::class, mappedBy: 'borrower')]
+    private Collection $borrowedBooks;
+
+    public function __construct()
+    {
+        $this->reservations = new ArrayCollection();
+        $this->borrowedBooks = new ArrayCollection();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email): self
+    {
+        $this->email = $email;
+        return $this;
     }
 
     public function getUsername(): ?string
@@ -76,10 +88,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->username;
     }
 
-    public function setUsername(string $username): static
+    public function setUsername(?string $username): self
     {
         $this->username = $username;
-
         return $this;
     }
 
@@ -90,13 +101,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getUserIdentifier(): string
     {
-        return (string) $this->username;
+        return (string) $this->email;
     }
 
     /**
      * @see UserInterface
-     *
-     * @return list<string>
      */
     public function getRoles(): array
     {
@@ -107,13 +116,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return array_unique($roles);
     }
 
-    /**
-     * @param list<string> $roles
-     */
-    public function setRoles(array $roles): static
+    public function setRoles(array $roles): self
     {
         $this->roles = $roles;
-
         return $this;
     }
 
@@ -125,10 +130,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->password;
     }
 
-    public function setPassword(string $password): static
+    public function setPassword(string $password): self
     {
         $this->password = $password;
-
         return $this;
     }
 
@@ -146,10 +150,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->firstname;
     }
 
-    public function setFirstname(string $firstname): static
+    public function setFirstname(string $firstname): self
     {
         $this->firstname = $firstname;
-
         return $this;
     }
 
@@ -158,22 +161,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->lastname;
     }
 
-    public function setLastname(string $lastname): static
+    public function setLastname(string $lastname): self
     {
         $this->lastname = $lastname;
-
-        return $this;
-    }
-
-    public function getEmail(): ?string
-    {
-        return $this->email;
-    }
-
-    public function setEmail(string $email): static
-    {
-        $this->email = $email;
-
         return $this;
     }
 
@@ -182,10 +172,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->lastConnectedAt;
     }
 
-    public function setLastConnectedAt(?\DateTimeImmutable $lastConnectedAt): static
+    public function setLastConnectedAt(?\DateTimeImmutable $lastConnectedAt): self
     {
         $this->lastConnectedAt = $lastConnectedAt;
-
         return $this;
     }
 
@@ -197,7 +186,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setConfirmationToken(?string $confirmationToken): self
     {
         $this->confirmationToken = $confirmationToken;
-
         return $this;
     }
 
@@ -209,7 +197,62 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsVerified(bool $isVerified): self
     {
         $this->isVerified = $isVerified;
+        return $this;
+    }
 
+    /**
+     * @return Collection<int, Reservation>
+     */
+    public function getReservations(): Collection
+    {
+        return $this->reservations;
+    }
+
+    public function addReservation(Reservation $reservation): self
+    {
+        if (!$this->reservations->contains($reservation)) {
+            $this->reservations->add($reservation);
+            $reservation->setUser($this);
+        }
+        return $this;
+    }
+
+    public function removeReservation(Reservation $reservation): self
+    {
+        if ($this->reservations->removeElement($reservation)) {
+            // set the owning side to null (unless already changed)
+            if ($reservation->getUser() === $this) {
+                $reservation->setUser(null);
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Book>
+     */
+    public function getBorrowedBooks(): Collection
+    {
+        return $this->borrowedBooks;
+    }
+
+    public function addBorrowedBook(Book $book): self
+    {
+        if (!$this->borrowedBooks->contains($book)) {
+            $this->borrowedBooks->add($book);
+            $book->setBorrower($this);
+        }
+        return $this;
+    }
+
+    public function removeBorrowedBook(Book $book): self
+    {
+        if ($this->borrowedBooks->removeElement($book)) {
+            // set the owning side to null (unless already changed)
+            if ($book->getBorrower() === $this) {
+                $book->setBorrower(null);
+            }
+        }
         return $this;
     }
 }

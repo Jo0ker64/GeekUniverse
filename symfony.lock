@@ -263,6 +263,9 @@
             "templates/base.html.twig"
         ]
     },
+    "symfony/ux-toggle-password": {
+        "version": "v2.19.3"
+    },
     "symfony/ux-turbo": {
         "version": "v2.15.0"
     },

@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Réserver un ouvrage{% endblock %}
+
+{% block body %}
+    <h1>Réserver {{ book.title }}</h1>
+
+    {{ form_start(reservationForm) }}
+    {{ form_row(reservationForm.reservationDate) }}
+    <button class="btn btn-primary">Réserver</button>
+    {{ form_end(reservationForm) }}
+{% endblock %}

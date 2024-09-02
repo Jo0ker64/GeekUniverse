@@ -1,0 +1,81 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon Profil{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1 class="mb-4">Mon Profil</h1>
+
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">
+            {{ message }}
+        </div>
+    {% endfor %}
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Informations personnelles</h5>
+            <p><strong>Nom :</strong> {{ app.user.lastname }}</p>
+            <p><strong>Prénom :</strong> {{ app.user.firstname }}</p>
+            <p><strong>Email :</strong> {{ app.user.email }}</p>
+            <p><strong>Nom d'utilisateur :</strong> {{ app.user.username }}</p>
+            <p><strong>Dernière connexion :</strong> 
+                {% if app.user.lastConnectedAt %}
+                    {{ app.user.lastConnectedAt|date('d/m/Y H:i') }}
+                {% else %}
+                    Non disponible
+                {% endif %}
+            </p>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Mes Réservations</h5>
+            {% if reservations is empty %}
+                <p>Vous n'avez aucune réservation en cours.</p>
+            {% else %}
+                <ul class="list-group">
+                {% for reservation in reservations %}
+                    <li class="list-group-item">
+                        {{ reservation.book.title }} - Réservé le {{ reservation.reservationDate|date('d/m/Y') }}
+                    </li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+            <a href="{{ path('app_profile_reservations') }}" class="btn btn-outline-primary mt-3">Voir toutes mes réservations</a>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Mes Emprunts</h5>
+            {% if borrowedBooks is empty %}
+                <p>Vous n'avez aucun livre emprunté actuellement.</p>
+            {% else %}
+                <ul class="list-group">
+                {% for book in borrowedBooks %}
+                    <li class="list-group-item">
+                        {{ book.title }}
+                    </li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+            <a href="{{ path('app_profile_borrowed_books') }}" class="btn btn-outline-primary mt-3">Voir tous mes emprunts</a>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <a href="{{ path('app_profile_edit') }}" class="btn btn-primary">Modifier mon profil</a>
+    </div>
+
+    {% if is_granted('ROLE_ADMIN') %}
+        <div class="card mt-4">
+            <div class="card-body">
+                <h5 class="card-title">Informations administrateur</h5>
+                <p>Vous avez des droits d'administrateur.</p>
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

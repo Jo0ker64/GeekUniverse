@@ -31,12 +31,6 @@ class Book
     #[ORM\Column(length: 255)]
     private ?string $cover = null;
 
-
-    // #[Assert\NotBlank()]
-    // #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
-    // private ?\DateTimeImmutable $createdAt = null;
-
-
     #[Assert\NotBlank()]
     #[ORM\Column]
     private ?\DateTimeImmutable $editedAt = null;
@@ -50,8 +44,8 @@ class Book
     #[ORM\Column]
     private ?int $pageNumber = null;
 
-    #[ORM\Column(length: 255)]
-    private ?BookStatus $status = null;
+    #[ORM\Column(type: 'string', enumType: BookStatus::class)]
+    private ?BookStatus $status = BookStatus::Available;
 
     #[ORM\ManyToOne(inversedBy: 'books')]
     #[ORM\JoinColumn(nullable: false)]
@@ -67,10 +61,20 @@ class Book
     #[ORM\JoinColumn(nullable: false)]
     private ?User $createdBy = null;
 
+    #[ORM\OneToMany(targetEntity: Reservation::class, mappedBy: 'book')]
+    private Collection $reservations;
+
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'borrowedBooks')]
+    private ?User $borrower = null;
+
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private ?\DateTimeInterface $borrowedAt = null;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
         $this->authors = new ArrayCollection();
+        $this->reservations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -239,6 +243,60 @@ class Book
     public function setCreatedBy(?User $createdBy): static
     {
         $this->createdBy = $createdBy;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Reservation>
+     */
+    public function getReservations(): Collection
+    {
+        return $this->reservations;
+    }
+
+    public function addReservation(Reservation $reservation): static
+    {
+        if (!$this->reservations->contains($reservation)) {
+            $this->reservations->add($reservation);
+            $reservation->setBook($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReservation(Reservation $reservation): static
+    {
+        if ($this->reservations->removeElement($reservation)) {
+            // set the owning side to null (unless already changed)
+            if ($reservation->getBook() === $this) {
+                $reservation->setBook(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getBorrower(): ?User
+    {
+        return $this->borrower;
+    }
+
+    public function setBorrower(?User $borrower): static
+    {
+        $this->borrower = $borrower;
+
+        return $this;
+    }
+
+    public function getBorrowedAt(): ?\DateTimeInterface
+    {
+        return $this->borrowedAt;
+    }
+
+    public function setBorrowedAt(?\DateTimeInterface $borrowedAt): static
+    {
+        $this->borrowedAt = $borrowedAt;
 
         return $this;
     }

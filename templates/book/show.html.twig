@@ -32,6 +32,13 @@
                                 Retour à la liste
                             </button>
                         </a>
+                        {% if app.user and book.status.getLabel() == 'Disponible' %}
+                            <a href="{{ path('app_book_reserve', {'id': book.id}) }}">
+                                <button class="btn btn-primary flex-shrink-0 ms-2" type="button">
+                                    Réserver ce livre
+                                </button>
+                            </a>
+                        {% endif %}
                     </div>
                 </div>
             </div>
