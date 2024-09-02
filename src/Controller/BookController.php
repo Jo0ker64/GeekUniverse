@@ -3,16 +3,17 @@
 namespace App\Controller;
 
 use App\Entity\Book;
+use DateTimeImmutable;
+use App\Enum\BookStatus;
+use Pagerfanta\Pagerfanta;
 use App\Entity\Reservation;
 use App\Repository\BookRepository;
-use App\Enum\BookStatus;
 use Doctrine\ORM\EntityManagerInterface;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
-use Pagerfanta\Pagerfanta;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/book')]
 class BookController extends AbstractController
@@ -56,7 +57,7 @@ class BookController extends AbstractController
         $reservation = new Reservation();
         $reservation->setBook($book);
         $reservation->setUser($this->getUser());
-        $reservation->setReservationDate(new \DateTime());
+        $reservation->setReservationDate(new DateTimeImmutable());
 
         $entityManager->persist($reservation);
 
