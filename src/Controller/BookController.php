@@ -21,16 +21,27 @@ class BookController extends AbstractController
     #[Route('', name: 'app_book_index', methods: ['GET'])]
     public function index(Request $request, BookRepository $repository): Response
     {
+        $page = $request->query->getInt('page', 1);
+        $searchTerm = $request->query->get('q', '');
+    
+        if (!empty($searchTerm)) {
+            $queryBuilder = $repository->createSearchQueryBuilder($searchTerm);
+        } else {
+            $queryBuilder = $repository->createQueryBuilder('b');
+        }
+    
         $books = Pagerfanta::createForCurrentPageWithMaxPerPage(
-            new QueryAdapter($repository->createQueryBuilder('b')),
-            $request->query->get('page', 1),
+            new QueryAdapter($queryBuilder),
+            $page,
             20
         );
-
+    
         return $this->render('book/index.html.twig', [
             'books' => $books,
+            'searchTerm' => $searchTerm,
         ]);
     }
+    
 
     #[Route('/{id}', name: 'app_book_show', requirements: ['id' => '\d+'], methods: ['GET'])]
     public function show(?Book $book): Response
